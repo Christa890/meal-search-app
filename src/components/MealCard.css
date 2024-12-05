@@ -1,0 +1,24 @@
+.meal-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    width: 250px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+  
+  .meal-image {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .meal-title {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  .meal-instructions {
+    font-size: 14px;
+    color: #555;
+  }
+  

@@ -1,25 +1,62 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import MealCard from "./components/MealCard";
+import { fetchMeals } from "./services/fetchMeals";
 
-function App() {
+const App = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [meals, setMeals] = useState([]);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  // Debounce the searchTerm
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
+  const handleSearch=function(e){
+    setSearchTerm(e.target.value)
+  }
+
+  // Fetch meals whenever the debouncedSearch value changes
+  useEffect(() => {
+    if (debouncedSearch.trim() === "") {
+      setMeals([]);
+      return;
+    }
+
+    const fetchAndSetMeals = async () => {
+      const fetchedMeals = await fetchMeals(debouncedSearch);
+      setMeals(fetchedMeals);
+    };
+
+    fetchAndSetMeals();
+  }, [debouncedSearch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <h1>Meal Search</h1>
+      <input
+        type="text"
+        placeholder="Search for a meal..."
+        value={searchTerm}
+        onChange={handleSearch}
+        className="search-box"
+      />
+      <div className="meals-container">
+        {meals.length === 0 ? (
+          <p>No results found.</p>
+        ) : (
+          meals.map((meal) => <MealCard key={meal.idMeal} meal={meal} />)
+        )}
+      </div>
     </div>
   );
-}
+};
 
 export default App;
